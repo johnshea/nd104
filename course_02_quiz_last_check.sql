@@ -40,3 +40,15 @@ ON a.sales_rep_id = sr.id
 JOIN region AS r
 ON sr.region_id = r.id
 WHERE o.standard_qty > 100;
+
+-- 5. Provide the name for each region for every order, as well as the account name and the unit price they paid (total_amt_usd/total) for the order. However, you should only provide the results if the standard order quantity exceeds 100 and the poster order quantity exceeds 50. Your final table should have 3 columns: region name, account name, and unit price. Sort for the smallest unit price first. In order to avoid a division by zero error, adding .01 to the denominator here is helpful (total_amt_usd/(total+0.01)).
+SELECT r.name AS region_name, a.name AS account_name, o.total_amt_usd/(o.total + 0.01) AS unit_price
+FROM orders AS o
+JOIN accounts AS a
+ON o.account_id = a.id
+JOIN sales_reps AS sr
+ON a.sales_rep_id = sr.id
+JOIN region AS r
+ON sr.region_id = r.id
+WHERE o.standard_qty > 100
+  AND o.poster_qty > 50;
