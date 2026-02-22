@@ -73,3 +73,11 @@ FROM web_events AS w
 JOIN accounts AS a
 ON w.account_id = a.id
 WHERE a.id = 1001;
+
+-- 8. Find all the orders that occurred in 2015. Your final table should have 4 columns: occurred_at, account name, order total, and order total_amt_usd.
+SELECT o.occurred_at, a.name, o.total, o.total_amt_usd
+FROM orders AS o
+JOIN accounts AS a
+ON o.account_id = a.id
+WHERE o.occurred_at BETWEEN '20150101' AND '20160101'
+ORDER BY o.occurred_at ASC;
