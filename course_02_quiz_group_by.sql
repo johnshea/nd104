@@ -40,3 +40,10 @@ FROM orders AS o
 JOIN accounts AS a
 ON a.id = o.account_id
 GROUP BY a.name;
+
+-- 7. Find the number of sales reps in each region. Your final table should have two columns - the region and the number of sales_reps. Order from the fewest reps to most reps.
+SELECT r.name, COUNT(*)
+FROM sales_reps AS sr
+JOIN region AS r
+ON sr.region_id = r.id
+GROUP BY r.name;
