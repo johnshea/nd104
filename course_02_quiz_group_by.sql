@@ -12,3 +12,11 @@ FROM orders AS o
 JOIN accounts AS A
 ON a.id = o.account_id
 GROUP BY a.name;
+
+-- 3. Via what channel did the most recent (latest) web_event occur, which account was associated with this web_event? Your query should return only three values - the date, channel, and account name.
+SELECT we.occurred_at, we.channel, a.name
+FROM web_events AS we
+JOIN accounts AS a
+ON a.id = we.account_id
+ORDER BY we.occurred_at DESC
+LIMIT 1;
