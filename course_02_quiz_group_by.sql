@@ -25,3 +25,11 @@ LIMIT 1;
 SELECT we.channel, count(*)
 FROM web_events AS we
 GROUP BY we.channel;
+
+-- 5. Who was the primary contact associated with the earliest web_event?
+SELECT a.primary_poc
+FROM web_events AS we
+JOIN accounts AS a
+ON a.id = we.account_id
+ORDER BY we.occurred_at ASC
+LIMIT 1;
