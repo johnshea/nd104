@@ -33,3 +33,10 @@ JOIN accounts AS a
 ON a.id = we.account_id
 ORDER BY we.occurred_at ASC
 LIMIT 1;
+
+-- 6. What was the smallest order placed by each account in terms of total usd. Provide only two columns - the account name and the total usd. Order from smallest dollar amounts to largest.
+SELECT a.name, MIN(o.total_amt_usd)
+FROM orders AS o
+JOIN accounts AS a
+ON a.id = o.account_id
+GROUP BY a.name;
