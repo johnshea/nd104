@@ -60,3 +60,13 @@ ON o.account_id = a.id
 GROUP BY a.name
 ORDER BY SUM(total_amt_usd) ASC
 LIMIT 1;
+
+-- 8. Which accounts used facebook as a channel to contact customers more than 6 times?
+SELECT a.name, COUNT(*)
+FROM web_events AS we
+JOIN accounts AS a
+ON we.account_id = a.id
+WHERE we.channel = 'facebook'
+GROUP BY a.name
+HAVING COUNT(*) > 6
+ORDER BY COUNT(*) ASC;
