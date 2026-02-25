@@ -7,3 +7,11 @@ GROUP BY sr.name
 HAVING COUNT(*) > 5
 ORDER BY account_count;
 
+-- 2. How many accounts have more than 20 orders?
+SELECT a.name, COUNT(*) AS order_count
+FROM orders AS o
+JOIN accounts AS a
+ON o.account_id = a.id
+GROUP BY a.name
+HAVING COUNT(*) > 20
+ORDER BY COUNT(*);
