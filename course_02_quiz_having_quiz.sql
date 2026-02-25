@@ -80,3 +80,9 @@ WHERE we.channel = 'facebook'
 GROUP BY a.name
 ORDER BY COUNT(*) DESC
 LIMIT 1;
+
+-- 10. Which channel was most frequently used by most accounts?
+SELECT we.channel, COUNT(*)
+FROM web_events AS we
+GROUP BY we.channel
+ORDER BY COUNT(*) DESC;
