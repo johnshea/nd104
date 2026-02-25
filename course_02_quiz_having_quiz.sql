@@ -70,3 +70,13 @@ WHERE we.channel = 'facebook'
 GROUP BY a.name
 HAVING COUNT(*) > 6
 ORDER BY COUNT(*) ASC;
+
+-- 9. Which account used facebook most as a channel?
+SELECT a.name, COUNT(*)
+FROM web_events AS we
+JOIN accounts AS a
+ON we.account_id = a.id
+WHERE we.channel = 'facebook'
+GROUP BY a.name
+ORDER BY COUNT(*) DESC
+LIMIT 1;
