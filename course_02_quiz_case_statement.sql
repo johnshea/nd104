@@ -43,3 +43,19 @@ FROM orders AS o
 WHERE DATE_PART('year', o.occurred_at) BETWEEN 2016 AND 2017
 GROUP BY o.account_id
 ORDER BY SUM(o.total_amt_usd);
+
+-- 5. We would like to identify top-performing sales reps, which are sales reps associated with more than 200 orders. Create a table with the sales rep name, the total number of orders, and a column with top or not depending on if they have more than 200 orders. Place the top salespeople first in your final table.
+SELECT
+  sr.name AS sales_rep_name,
+  COUNT(o.id) AS order_count,
+  CASE
+    WHEN COUNT(o.id) > 200 THEN 'top'
+    ELSE 'not'
+  END
+FROM orders AS o
+JOIN accounts AS a
+ON o.account_id = a.id
+JOIN sales_reps AS sr
+ON a.sales_rep_id = sr.id
+GROUP BY sr.ID, sr.name
+ORDER BY COUNT(o.id) DESC;
