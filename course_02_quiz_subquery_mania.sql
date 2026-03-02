@@ -30,3 +30,49 @@ JOIN (
   ) subq
 ON subq.region_name = tsby.region_name
 AND subq.max_sum_total_amt_usd = tsby.sum_total_amt_usd;
+
+-- 2. For the region with the largest (sum) of sales total_amt_usd, how many total (count) orders were placed?
+WITH total_sales_by_region AS (
+  SELECT
+    r.id,
+    r.name AS region_name,
+    SUM(o.total_amt_usd) AS sum_total_amt_usd
+  FROM orders AS o
+  JOIN accounts AS a
+  ON o.account_id = a.id
+  JOIN sales_reps AS sr
+  ON a.sales_rep_id = sr.id
+  JOIN region AS r
+  ON sr.region_id = r.id
+  GROUP BY r.id, r.name
+  ORDER BY r.id, r.name DESC
+)
+
+, total_order_counts_by_region AS (
+  SELECT
+    --r.id,
+    r.name AS region_name,
+    COUNT(o.*) AS count_for_region
+  FROM orders AS o
+  JOIN accounts AS a
+  ON o.account_id = a.id
+  JOIN sales_reps AS sr
+  ON a.sales_rep_id = sr.id
+  JOIN region AS r
+  ON sr.region_id = r.id
+  GROUP BY r.id, r.name
+  ORDER BY r.id, r.name DESC
+)
+
+SELECT tocby.region_name, tocby.count_for_region
+FROM total_order_counts_by_region AS tocby
+JOIN (
+  SELECT
+    region_name AS subq_region_name
+  FROM total_sales_by_region AS tsby
+  JOIN (
+    SELECT MAX(sum_total_amt_usd)AS max_usd
+    FROM total_sales_by_region) subq
+    ON tsby.sum_total_amt_usd = subq.max_usd
+  ) subq
+ON subq.subq_region_name = tocby.region_name;
