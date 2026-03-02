@@ -76,3 +76,43 @@ JOIN (
     ON tsby.sum_total_amt_usd = subq.max_usd
   ) subq
 ON subq.subq_region_name = tocby.region_name;
+
+-- 3. How many accounts had more total purchases than the account name which has bought the most standard_qty paper throughout their lifetime as a customer?
+WITH accounts_sum_standard_qty AS (
+  SELECT
+    a.id,
+    a.name,
+    SUM(o.standard_qty) AS sum_standard_qty
+  FROM orders AS o
+  JOIN accounts AS a
+  ON o.account_id = a.id
+  GROUP BY a.id, a.name
+  ORDER BY SUM(o.standard_qty) DESC
+),
+accounts_total_purchases AS (
+  SELECT
+    a.id,
+    a.name,
+    COUNT(o.*) AS total_purchases
+  FROM orders AS o
+  JOIN accounts AS a
+  ON o.account_id = a.id
+  GROUP BY a.id, a.name
+  ORDER BY COUNT(o.*) DESC
+)
+
+SELECT *
+FROM accounts_total_purchases
+WHERE total_purchases >
+(SELECT actp.total_purchases
+FROM accounts_total_purchases AS actp
+JOIN (
+  SELECT id, name
+  FROM accounts_sum_standard_qty AS assq
+  WHERE assq.sum_standard_qty = (
+    SELECT MAX(sum_standard_qty)
+    FROM accounts_sum_standard_qty
+  )
+) AS subq
+ON actp.id = subq.id
+AND actp.name = subq.name);
