@@ -116,3 +116,17 @@ JOIN (
 ) AS subq
 ON actp.id = subq.id
 AND actp.name = subq.name);
+
+-- 4. For the customer that spent the most (in total over their lifetime as a customer) total_amt_usd, how many web_events did they have for each channel?
+SELECT we.channel, COUNT(we.*)
+FROM web_events AS we
+WHERE we.account_id = (
+  SELECT o.account_id
+  FROM orders AS o
+  JOIN accounts AS a
+  ON o.account_id = a.id
+  GROUP BY o.account_id
+  ORDER BY SUM(o.total_amt_usd) DESC
+  LIMIT 1)
+GROUP BY we.channel
+ORDER BY COUNT(we.*) DESC;
