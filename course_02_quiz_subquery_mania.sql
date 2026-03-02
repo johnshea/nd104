@@ -130,3 +130,30 @@ WHERE we.account_id = (
   LIMIT 1)
 GROUP BY we.channel
 ORDER BY COUNT(we.*) DESC;
+
+-- 5. What is the lifetime average amount spent in terms of total_amt_usd for the top 10 total spending accounts?
+SELECT AVG(account_total_sum)
+FROM (SELECT o.account_id, SUM(o.total_amt_usd) AS account_total_sum
+FROM orders AS o
+JOIN accounts AS a
+ON o.account_id = a.id
+GROUP BY o.account_id
+ORDER BY SUM(o.total_amt_usd) DESC
+LIMIT 10);
+
+-- 6. What is the lifetime average amount spent in terms of total_amt_usd, including only the companies that spent more per order, on average, than the average of all orders?
+SELECT o.account_id, AVG(o.total_amt_usd)
+FROM orders AS o
+WHERE o.account_id IN (
+SELECT subq.account_id
+FROM (
+  SELECT
+    o.account_id,
+    AVG(o.total_amt_usd) AS avg_total_per_account
+  FROM orders AS o
+  GROUP BY o.account_id
+  ORDER BY AVG(o.total_amt_usd) DESC) subq
+WHERE subq.avg_total_per_account > (SELECT AVG(o.total_amt_usd)
+FROM orders AS o))
+GROUP BY o.account_id
+ORDER BY AVG(o.total_amt_usd) DESC;
