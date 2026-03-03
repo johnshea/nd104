@@ -28,3 +28,18 @@ SELECT
   COUNT(*)
 FROM accounts
 GROUP BY 1;
+
+-- 4. Consider vowels as a, e, i, o, and u. What proportion of company names start with a vowel, and what percent start with anything else?
+SELECT
+  CASE
+    WHEN LOWER(LEFT(name, 1)) = 'a' THEN 'Vowel'
+    WHEN LOWER(LEFT(name, 1)) = 'e' THEN 'Vowel'
+    WHEN LOWER(LEFT(name, 1)) = 'i' THEN 'Vowel'
+    WHEN LOWER(LEFT(name, 1)) = 'o' THEN 'Vowel'
+    WHEN LOWER(LEFT(name, 1)) = 'u' THEN 'Vowel'
+    ELSE 'Other'
+  END,
+  COUNT(*)
+FROM accounts
+GROUP BY 1
+ORDER BY COUNT(*) DESC;
