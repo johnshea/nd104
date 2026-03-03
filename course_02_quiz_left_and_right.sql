@@ -9,3 +9,22 @@ SELECT LEFT(name, 1), COUNT(*)
 FROM accounts
 GROUP BY LEFT(name, 1)
 ORDER BY COUNT(*) DESC;
+
+-- 3. Use the accounts table and a CASE statement to create two groups: one group of company names that start with a number and the second group of those company names that start with a letter. What proportion of company names start with a letter?
+SELECT
+  CASE
+    WHEN LEFT(name, 1) = '0' THEN 'Number'
+    WHEN LEFT(name, 1) = '1' THEN 'Number'
+    WHEN LEFT(name, 1) = '2' THEN 'Number'
+    WHEN LEFT(name, 1) = '3' THEN 'Number'
+    WHEN LEFT(name, 1) = '4' THEN 'Number'
+    WHEN LEFT(name, 1) = '5' THEN 'Number'
+    WHEN LEFT(name, 1) = '6' THEN 'Number'
+    WHEN LEFT(name, 1) = '7' THEN 'Number'
+    WHEN LEFT(name, 1) = '8' THEN 'Number'
+    WHEN LEFT(name, 1) = '9' THEN 'Number'
+    ELSE 'Letter'
+  END,
+  COUNT(*)
+FROM accounts
+GROUP BY 1;
