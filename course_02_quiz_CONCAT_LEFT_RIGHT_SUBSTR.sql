@@ -15,3 +15,9 @@ SELECT
     SUBSTR(a.website, 5)
   ) AS email_id
 FROM accounts AS a;
+
+-- 3. From the web_events table, display the concatenated value of account_id, '_' , channel, '_', count of web events of the particular channel
+SELECT CONCAT(we.account_id, '_', we.channel, '_', COUNT(we.*))
+FROM web_events AS we
+GROUP BY we.account_id, we.channel
+ORDER BY we.account_id ASC, COUNT(*) DESC;
